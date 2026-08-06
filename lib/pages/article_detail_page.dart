@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -55,25 +57,35 @@ class _DetailBody extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
       children: [
         if (article.image != null && article.image!.isNotEmpty)
+          // 2026-08-06: this was a bare AspectRatio(16/9), which on a
+          // wide detail pane meant the hero grew with the column — at
+          // 1000px it was 560px tall and pushed the headline and the
+          // Bible Lens off the bottom of the window. The photo is
+          // context, not the content. 16:9 still holds on narrow
+          // screens; past ~570px wide it stops growing and crops
+          // instead, which BoxFit.cover already handles.
           ClipRRect(
             borderRadius: BorderRadius.circular(14),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: RetryNetworkImage(
-                url: article.image!,
-                fit: BoxFit.cover,
-                placeholderBuilder: (context) => DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        scheme.secondary.withValues(alpha: 0.4),
-                        scheme.secondary.withValues(alpha: 0.15),
-                      ],
+            child: LayoutBuilder(
+              builder: (context, c) => SizedBox(
+                width: double.infinity,
+                height: math.min(c.maxWidth * 9 / 16, 320),
+                child: RetryNetworkImage(
+                  url: article.image!,
+                  fit: BoxFit.cover,
+                  placeholderBuilder: (context) => DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          scheme.secondary.withValues(alpha: 0.4),
+                          scheme.secondary.withValues(alpha: 0.15),
+                        ],
+                      ),
                     ),
+                    child: Icon(Icons.public, color: scheme.surface, size: 40),
                   ),
-                  child: Icon(Icons.public, color: scheme.surface, size: 40),
                 ),
               ),
             ),
@@ -122,10 +134,7 @@ class _DetailBody extends StatelessWidget {
         ),
         if (body.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text(
-            body,
-            style: const TextStyle(fontSize: 15.5, height: 1.6),
-          ),
+          Text(body, style: const TextStyle(fontSize: 15.5, height: 1.6)),
         ] else ...[
           const SizedBox(height: 24),
           Text(

@@ -34,13 +34,55 @@
 </head>
 <body>
   <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
+    2026-08-06: the app used to boot to a blank white page while
+    main.dart.js downloaded — several seconds on a cold load, with
+    nothing on screen to say anything was happening.
 
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
+    This splash is plain HTML on purpose. A Flutter loading page cannot
+    help here: it only appears once the framework is already up, which
+    is the part that takes the time. This paints on the first byte, and
+    removes itself on Flutter's first frame.
   -->
+  <div id="boot">
+    <img src="icons/Icon-192.png" alt="" width="88" height="88">
+    <div class="t">News Insights</div>
+    <div class="z">新闻洞见</div>
+    <div class="v">v__APP_VERSION__</div>
+  </div>
+  <style>
+    #boot{position:fixed;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:2px;
+      background:#FBF3E7;font:400 15px/1.5 -apple-system,BlinkMacSystemFont,
+      "Segoe UI",system-ui,sans-serif;color:#5E340A;z-index:9999;
+      transition:opacity .28s ease}
+    #boot img{border-radius:22%;box-shadow:0 6px 18px rgba(94,52,10,.22);
+      margin-bottom:14px}
+    #boot .t{font-size:19px;font-weight:600;letter-spacing:.01em}
+    #boot .z{font-size:14px;color:#9A5A14;letter-spacing:.24em;
+      margin-top:1px}
+    #boot .v{margin-top:12px;font-size:11px;opacity:.55;
+      font-variant-numeric:tabular-nums}
+    #boot.gone{opacity:0;pointer-events:none}
+    @media (prefers-color-scheme: dark){
+      #boot{background:#1A1206;color:#EBD9BC}
+      #boot .z{color:#C9822A}
+    }
+  </style>
+  <script>
+    // Remove on Flutter's first frame. The timeout is a floor, not the
+    // mechanism — if the app somehow never signals, the splash must
+    // still not trap the reader behind it.
+    window.addEventListener('flutter-first-frame', function () {
+      var b = document.getElementById('boot');
+      if (!b) return;
+      b.classList.add('gone');
+      setTimeout(function () { b.remove(); }, 300);
+    });
+    setTimeout(function () {
+      var b = document.getElementById('boot');
+      if (b) { b.classList.add('gone'); setTimeout(function(){ b.remove(); }, 300); }
+    }, 12000);
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

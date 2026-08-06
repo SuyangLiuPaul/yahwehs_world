@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../constants/app_version.dart';
 import 'package:provider/provider.dart';
 
 import 'package:news_insights/models/app_settings.dart';
@@ -502,6 +504,19 @@ class _Masthead extends StatelessWidget {
                   .replaceFirst('{time}', updated),
               style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
             ),
+          // Which BUILD you are looking at, and when it shipped. Note
+          // this is a different thing from the line above: that one is
+          // when the FEED last refreshed, this is when the APP last
+          // changed. Conflating them hides which one is stale.
+          Text(
+            formatReleaseTimeLocal().isEmpty
+                ? 'v$kAppVersion'
+                : 'v$kAppVersion · ${formatReleaseTimeLocal()}',
+            style: TextStyle(
+              fontSize: 10.5,
+              color: scheme.onSurfaceVariant.withValues(alpha: 0.6),
+            ),
+          ),
         ],
       ),
     );
