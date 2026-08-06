@@ -4,7 +4,7 @@
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FBF3E7",
-    "theme_color": "#B8860B",
+    "theme_color": "#9A5A14",
     "description": "World, China and Australia headlines paired with a related Bible verse and reflection.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
