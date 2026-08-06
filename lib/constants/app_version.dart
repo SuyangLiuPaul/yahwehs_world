@@ -23,21 +23,20 @@ const String kAppReleaseTime = String.fromEnvironment(
   defaultValue: '',
 );
 
-/// `2026-08-06 21:14 UTC+10`, in local time. Empty when the build did
-/// not stamp one, so callers can omit the line rather than print a
-/// placeholder that looks like a bug.
-String formatReleaseTimeLocal() {
+/// `2026-08-06 14:16`, in the reader's own timezone.
+///
+/// No UTC offset on purpose: the value is ALREADY local, so printing
+/// the offset back to the reader is noise. It would only earn its
+/// space somewhere with room to spare, like SeekSparks' status bar.
+///
+/// Empty when the build did not stamp a time, so callers can omit the
+/// line rather than print a placeholder that looks like a bug.
+String formatReleaseTimeShort() {
   if (kAppReleaseTime.isEmpty) return '';
   final parsed = DateTime.tryParse(kAppReleaseTime);
   if (parsed == null) return kAppReleaseTime;
-  final local = parsed.toLocal();
+  final l = parsed.toLocal();
   String two(int n) => n.toString().padLeft(2, '0');
-  final off = local.timeZoneOffset;
-  final sign = off.isNegative ? '-' : '+';
-  final hours = off.inHours.abs();
-  final mins = off.inMinutes.abs() % 60;
-  final offset =
-      'UTC$sign$hours${mins == 0 ? '' : ':${two(mins)}'}';
-  return '${local.year}-${two(local.month)}-${two(local.day)} '
-      '${two(local.hour)}:${two(local.minute)} $offset';
+  return '${l.year}-${two(l.month)}-${two(l.day)} '
+      '${two(l.hour)}:${two(l.minute)}';
 }

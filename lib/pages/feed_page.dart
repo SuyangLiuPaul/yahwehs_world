@@ -498,24 +498,32 @@ class _Masthead extends StatelessWidget {
               ),
             ),
           ),
-          if (updated.isNotEmpty)
-            Text(
-              (uiStrings['lastUpdated']?[locale] ?? 'Updated {time}')
-                  .replaceFirst('{time}', updated),
-              style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
-            ),
-          // Which BUILD you are looking at, and when it shipped. Note
-          // this is a different thing from the line above: that one is
-          // when the FEED last refreshed, this is when the APP last
-          // changed. Conflating them hides which one is stale.
-          Text(
-            formatReleaseTimeLocal().isEmpty
-                ? 'v$kAppVersion'
-                : 'v$kAppVersion · ${formatReleaseTimeLocal()}',
-            style: TextStyle(
-              fontSize: 10.5,
-              color: scheme.onSurfaceVariant.withValues(alpha: 0.6),
-            ),
+          // Two facts, stacked, not run together: the top line is when
+          // the FEED refreshed, the bottom is which BUILD is running.
+          // These were briefly siblings in this Row, which printed
+          // "更新于 2小时前v1.1.6 · …" as one unbroken string.
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (updated.isNotEmpty)
+                Text(
+                  (uiStrings['lastUpdated']?[locale] ?? 'Updated {time}')
+                      .replaceFirst('{time}', updated),
+                  style: TextStyle(
+                      fontSize: 12, color: scheme.onSurfaceVariant),
+                ),
+              Text(
+                formatReleaseTimeShort().isEmpty
+                    ? 'v$kAppVersion'
+                    : 'v$kAppVersion · ${formatReleaseTimeShort()}',
+                style: TextStyle(
+                  fontSize: 10,
+                  height: 1.4,
+                  color: scheme.onSurfaceVariant.withValues(alpha: 0.55),
+                ),
+              ),
+            ],
           ),
         ],
       ),
