@@ -106,14 +106,20 @@ class _DetailBody extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
+        // 2026-08-06: the lens used to sit BELOW "Read original". The
+        // whole premise of this app is world news read alongside
+        // Scripture, and that panel was placed after the button that
+        // sends the reader away — so the one thing only this app does
+        // was the one thing most readers never saw. Verse first, exit
+        // after.
+        VerseLensCard(article: article, locale: locale),
+        const SizedBox(height: 16),
         OutlinedButton.icon(
           onPressed: _openOriginal,
           icon: const Icon(Icons.open_in_new, size: 16),
           label: Text(uiStrings['readOriginal']?[locale] ?? 'Read original'),
         ),
-        const SizedBox(height: 20),
-        VerseLensCard(article: article, locale: locale),
         if (body.isNotEmpty) ...[
           const SizedBox(height: 24),
           Text(
