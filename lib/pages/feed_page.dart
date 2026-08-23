@@ -310,6 +310,7 @@ class _FeedPageState extends State<FeedPage> {
         _SectionFilterBar(
           value: _sectionFilter,
           locale: locale,
+          sections: _bundle!.sections,
           onChanged: _onSectionFilterChanged,
         ),
         const Divider(height: 1),
@@ -535,19 +536,22 @@ class _SectionFilterBar extends StatelessWidget {
   const _SectionFilterBar({
     required this.value,
     required this.locale,
+    required this.sections,
     required this.onChanged,
   });
   final String value;
   final String locale;
+  final List<NewsSection> sections;
   final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
+    // Chips come from whatever sections the feed actually shipped, so a
+    // new desk added upstream appears here without an app release.
     final options = <(String, String)>[
       ('all', uiStrings['sectionAll']?[locale] ?? 'All'),
-      ('world', uiStrings['sectionWorld']?[locale] ?? 'World'),
-      ('china', uiStrings['sectionChina']?[locale] ?? 'China'),
-      ('australia', uiStrings['sectionAustralia']?[locale] ?? 'Australia'),
+      for (final s in sections)
+        if (s.items.isNotEmpty) (s.id, s.label(locale)),
     ];
     return SizedBox(
       height: 44,
