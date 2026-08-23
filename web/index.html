@@ -23,6 +23,7 @@
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#2E72A4">
   <meta name="apple-mobile-web-app-title" content="Yahweh's World">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
@@ -66,16 +67,16 @@
        both extremes. */
     #boot{position:fixed;inset:0;display:flex;flex-direction:column;
       align-items:center;justify-content:center;
-      background:#FBF3E7;color:#5E340A;z-index:9999;
+      background:#B2E0F7;color:#1E4E7A;z-index:9999;
       font:400 15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",
         system-ui,sans-serif;
       /* Fade the splash IN, so a warm cache that boots in 100ms never
          flashes it. An instant flash reads as a glitch. */
       opacity:0;animation:boot-in .32s ease .18s forwards;
       transition:opacity .3s ease}
-    #boot .mark{width:clamp(104px,20vmin,168px);aspect-ratio:1;
+    #boot .mark{width:clamp(148px,28vmin,208px);aspect-ratio:1;
       border-radius:22%;overflow:hidden;
-      box-shadow:0 10px 30px rgba(94,52,10,.24);
+      box-shadow:0 10px 30px rgba(26,88,142,.28);
       /* Slow breathing. Without motion a splash cannot be told apart
          from a frozen app — this signals "working", which matters more
          than how large the icon is. */
@@ -85,7 +86,7 @@
       font-size:clamp(19px,2.6vmin,23px);font-weight:600;
       letter-spacing:.01em}
     #boot .z{margin-top:3px;font-size:clamp(13px,1.8vmin,15px);
-      color:#9A5A14;letter-spacing:.26em;text-indent:.26em}
+      color:#2E72A4;letter-spacing:.26em;text-indent:.26em}
     /* Version is metadata, not identity — pinned low, out of the
        lockup, where it informs without competing. */
     #boot .v{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));
@@ -97,8 +98,8 @@
       0%,100%{transform:scale(1)}
       50%{transform:scale(1.045)}}
     @media (prefers-color-scheme: dark){
-      #boot{background:#1A1206;color:#EBD9BC}
-      #boot .z{color:#C9822A}
+      #boot{background:#0E2438;color:#CBE4F5}
+      #boot .z{color:#7FB4DC}
       #boot .mark{box-shadow:0 10px 30px rgba(0,0,0,.5)}}
     /* Someone who has asked for less motion gets the splash without
        the pulse — they still get the fade, which is not vestibular. */
