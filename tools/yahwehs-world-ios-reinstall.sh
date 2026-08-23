@@ -55,14 +55,24 @@ cd "$PROJECT" || { echo "FATAL: project directory missing"; exit 1; }
 echo "--- git pull"
 git pull --ff-only origin main || echo "WARN: pull failed; building whatever is checked out"
 
-APP_VERSION="$(awk '/^version:/ {print $2; exit}' pubspec.yaml)"
-echo "--- building v${APP_VERSION:-unknown}"
+APP_VERSION="$(awk '/^version:/ {print $2; exit}' pubspec.yaml | cut -d'+' -f1)"
+APP_RELEASE_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+echo "--- building v${APP_VERSION:-unknown} ($APP_RELEASE_TIME)"
+
+# The version shown in the app header comes from --dart-define, not
+# from pubspec: without these the build falls back to the literal in
+# lib/constants/app_version.dart and the app misreports its own
+# version. release_web.sh passes the same pair.
+DEFINES=(
+  --dart-define="APP_VERSION=$APP_VERSION"
+  --dart-define="APP_RELEASE_TIME=$APP_RELEASE_TIME"
+)
 
 successes=0
 failures=0
 
 echo "--- flutter build ios --release"
-if "$FLUTTER" build ios --release; then
+if "$FLUTTER" build ios --release "${DEFINES[@]}"; then
   for entry in "${IOS_DEVICES[@]}"; do
     uuid="${entry%%|*}"
     name="${entry##*|}"
@@ -83,7 +93,7 @@ else
 fi
 
 echo "--- flutter build macos --release"
-if "$FLUTTER" build macos --release && [[ -d "$MACOS_APP" ]]; then
+if "$FLUTTER" build macos --release "${DEFINES[@]}" && [[ -d "$MACOS_APP" ]]; then
   # ditto, not cp: preserves the signature and bundle structure.
   if ditto "$MACOS_APP" "$MACOS_DEST"; then
     echo "OK: $MACOS_DEST"

@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds need this declared here. The Flutter template
+         only puts it in the debug/profile manifests, so a release APK
+         silently had no network at all: the feed never loaded and the
+         app showed nothing but its bundled snapshot. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"

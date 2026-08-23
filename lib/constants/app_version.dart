@@ -10,9 +10,13 @@
 library;
 
 /// Semantic version, injected from pubspec by the release script.
+/// A build that skipped the release script says so, rather than
+/// naming a version it is not. The old hard-coded literal went stale
+/// the moment the next release shipped, and every native build showed
+/// it — the app on a phone claimed to be v1.1.6 for months.
 const String kAppVersion = String.fromEnvironment(
   'APP_VERSION',
-  defaultValue: '1.1.6',
+  defaultValue: 'dev',
 );
 
 /// ISO-8601 UTC build time. Rendered in the READER's timezone, never
