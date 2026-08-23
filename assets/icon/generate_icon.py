@@ -1,58 +1,36 @@
-"""Generates the Yahweh's World app icon: an open book (the app's own
-Bible-verse motif, reused from the auto_stories icon on article cards)
-with a small globe emblem at the spine, on a warm amber gradient.
+"""Generates the Yahweh's World app icon: a flat medium-blue globe with
+white grid lines, an open white book in front — the app's news-meets-
+Scripture motif — on the same light-blue ground as its sister app.
 
-v2 — smoother bezier-curved pages, a diagonal gradient background for
-depth, and a soft drop shadow, replacing the flat trapezoid/solid-fill
-v1 which read as too plain/blocky for an app icon.
+v3 — restyled to match Yahweh's Words (雅伟之言): that icon is a flat
+illustration (solid light-blue background, medium-blue fill, white
+detail, dark-blue outlines, no gradients or soft shadows), and the two
+apps should read as siblings on a home screen. Replaces the v2 warm
+amber gradient + drop-shadow look, which matched nothing else in the
+family. Palette sampled directly from yswords/web/icons/Icon-512.png.
 
 Outputs:
   icon.png            — full icon (background + foreground), 1024x1024
   icon_foreground.png — foreground only, transparent bg, for Android
                         adaptive icons (kept within the ~66% safe zone)
+  preview_*.png       — small-size legibility checks
 
 Run: python3 generate_icon.py
 """
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 SCALE = 4
 SIZE = 1024 * SCALE
 
-# Gradient endpoints — lighter gold top-left to a deeper goldenrod-brown
-# bottom-right, both close to the app's amber seed (0xFFB8860B) so the
-# icon still reads as "the same amber" at a glance, just with depth.
-GRAD_TOP = (214, 160, 40)
-GRAD_BOTTOM = (139, 101, 20)
-WHITE = (255, 253, 248, 255)  # warm off-white, matches the app's cream surface
-SHADOW = (90, 63, 10, 90)
+# Sister-app palette (sampled from Yahweh's Words Icon-512.png).
+BG = (178, 224, 247, 255)        # light blue ground
+BLUE = (46, 114, 164, 255)       # medium blue fill
+WHITE = (240, 248, 252, 255)     # near-white detail
+OUTLINE = (26, 88, 142, 255)     # dark blue outline
 
 
-def rounded_mask(size, radius):
-    mask = Image.new("L", (size, size), 0)
-    ImageDraw.Draw(mask).rounded_rectangle([0, 0, size, size], radius=radius, fill=255)
-    return mask
-
-
-def diagonal_gradient(size, top_color, bottom_color):
-    # Gradients have no fine detail to preserve, so compute at a small
-    # resolution (cheap, pure-Python loop) and let LANCZOS upscaling
-    # do the smoothing — avoids a multi-million-iteration Python loop
-    # at full 4x-supersampled size.
-    small = 256
-    grad = Image.new("RGB", (small, small))
-    px = grad.load()
-    for y in range(small):
-        for x in range(small):
-            t = (x + y) / (2 * small)
-            r = int(top_color[0] + (bottom_color[0] - top_color[0]) * t)
-            g = int(top_color[1] + (bottom_color[1] - top_color[1]) * t)
-            b = int(top_color[2] + (bottom_color[2] - top_color[2]) * t)
-            px[x, y] = (r, g, b)
-    return grad.resize((size, size), Image.BICUBIC)
-
-
-def quad_bezier(p0, p1, p2, steps=40):
+def quad_bezier(p0, p1, p2, steps=60):
     pts = []
     for i in range(steps + 1):
         t = i / steps
@@ -62,73 +40,83 @@ def quad_bezier(p0, p1, p2, steps=40):
     return pts
 
 
-def open_book_path(cx, half_width, spine_top, spine_bottom, outer_top, outer_bottom, curl):
-    """One page's outline, curved (not flat) along both the top and
-    bottom edges via quadratic beziers, mirrored for left/right."""
-
-    def page(sign):
-        near_x = cx
-        far_x = cx + sign * half_width
-        # Top edge: spine -> outer, curving slightly upward (page lifts).
-        top_ctrl = (cx + sign * half_width * 0.5, spine_top - curl)
-        top_edge = quad_bezier((near_x, spine_top), top_ctrl, (far_x, outer_top))
-        # Bottom edge: outer -> spine, curving slightly (page droops).
-        bottom_ctrl = (cx + sign * half_width * 0.5, spine_bottom + curl * 0.6)
-        bottom_edge = quad_bezier((far_x, outer_bottom), bottom_ctrl, (near_x, spine_bottom))
-        return top_edge + bottom_edge
-
-    return page(1), page(-1)
+def page_path(cx, sign, half_width, spine_top, spine_bottom, outer_top, outer_bottom, curl):
+    """Outline of one page (sign=+1 right, -1 left), gently curved."""
+    far_x = cx + sign * half_width
+    top_ctrl = (cx + sign * half_width * 0.5, spine_top - curl)
+    top_edge = quad_bezier((cx, spine_top), top_ctrl, (far_x, outer_top))
+    bottom_ctrl = (cx + sign * half_width * 0.5, spine_bottom + curl * 0.6)
+    bottom_edge = quad_bezier((far_x, outer_bottom), bottom_ctrl, (cx, spine_bottom))
+    return top_edge + bottom_edge
 
 
-def globe(draw, cx, cy, r, color, line_color):
-    draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color)
-    lw = max(3, int(r * 0.14))
-    draw.line([(cx - r, cy), (cx + r, cy)], fill=line_color, width=lw)
+def draw_globe(draw, cx, cy, r, lw):
+    """Flat globe: blue disc, white parallels + meridians, dark ring."""
+    box = [cx - r, cy - r, cx + r, cy + r]
+    draw.ellipse(box, fill=BLUE, outline=OUTLINE, width=int(lw * 1.4))
+
+    grid_w = int(lw * 0.9)
+    # Sparse grid — the sister icon's line work is minimal, and fewer
+    # lines stay legible at 48px where a dense grid turns to mush.
+    for frac in (-0.5, 0.0, 0.5):
+        y = cy + r * frac
+        half = (r * r - (y - cy) ** 2) ** 0.5 * 0.985
+        draw.line([(cx - half, y), (cx + half, y)], fill=WHITE, width=grid_w)
+    draw.line([(cx, cy - r * 0.985), (cx, cy + r * 0.985)], fill=WHITE, width=grid_w)
+    rx = r * 0.52
+    draw.ellipse([cx - rx, cy - r * 0.985, cx + rx, cy + r * 0.985],
+                 outline=WHITE, width=grid_w)
+
+
+def draw_book(draw, cx, s, lw):
+    """Open white book with dark-blue outline, front and center."""
+    half_width = s * 0.335
+    spine_top = s * 0.615
+    spine_bottom = s * 0.815
+    outer_top = s * 0.545
+    outer_bottom = s * 0.755
+    curl = s * 0.035
+
+    for sign in (1, -1):
+        pts = page_path(cx, sign, half_width, spine_top, spine_bottom,
+                        outer_top, outer_bottom, curl)
+        draw.polygon(pts, fill=WHITE, outline=OUTLINE, width=int(lw * 1.4))
+    # Spine crease.
+    draw.line([(cx, spine_top), (cx, spine_bottom)], fill=OUTLINE, width=int(lw))
 
 
 def build(foreground_only: bool) -> Image.Image:
-    img = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    img = Image.new("RGBA", (SIZE, SIZE),
+                    (0, 0, 0, 0) if foreground_only else BG)
+    draw = ImageDraw.Draw(img)
 
-    if not foreground_only:
-        radius = int(SIZE * 0.225)
-        grad = diagonal_gradient(SIZE, GRAD_TOP, GRAD_BOTTOM).convert("RGBA")
-        mask = rounded_mask(SIZE, radius)
-        bg = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
-        bg.paste(grad, (0, 0), mask)
-        img = Image.alpha_composite(img, bg)
+    lw = SIZE * 0.010  # base line weight, matches the sister icon's strokes
 
-    cx = SIZE // 2
-    half_width = int(SIZE * 0.315)
-    spine_top = int(SIZE * 0.395)
-    spine_bottom = int(SIZE * 0.735)
-    outer_top = int(SIZE * 0.445)
-    outer_bottom = int(SIZE * 0.715)
-    curl = SIZE * 0.028
+    if foreground_only:
+        # Adaptive-icon safe zone: draw onto a virtual smaller canvas.
+        s = SIZE * 0.66
+        offset = (SIZE - s) / 2
+    else:
+        s = SIZE
+        offset = 0
 
-    # Soft drop shadow beneath the book for depth.
-    if not foreground_only:
-        shadow_layer = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
-        sd = ImageDraw.Draw(shadow_layer)
-        right, left = open_book_path(
-            cx, half_width, spine_top + 18, spine_bottom + 18,
-            outer_top + 18, outer_bottom + 18, curl,
-        )
-        sd.polygon(right, fill=SHADOW)
-        sd.polygon(left, fill=SHADOW)
-        shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(radius=SIZE * 0.012))
-        img = Image.alpha_composite(img, shadow_layer)
+    cx = offset + s * 0.5
+    # Globe sits high, half-hidden behind the book — same composition
+    # as v2 so the app stays recognizable, just flat now.
+    draw_globe(draw, cx, offset + s * 0.40, s * 0.265, lw)
+    # Local closure so book coordinates track the safe-zone canvas.
+    half_width = s * 0.335
+    spine_top = offset + s * 0.635
+    spine_bottom = offset + s * 0.83
+    outer_top = offset + s * 0.535
+    outer_bottom = offset + s * 0.73
+    curl = s * 0.06
+    for sign in (1, -1):
+        pts = page_path(cx, sign, half_width, spine_top, spine_bottom,
+                        outer_top, outer_bottom, curl)
+        draw.polygon(pts, fill=WHITE, outline=OUTLINE, width=int(lw * 1.4))
+    draw.line([(cx, spine_top), (cx, spine_bottom)], fill=OUTLINE, width=int(lw))
 
-    fg_layer = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
-    d = ImageDraw.Draw(fg_layer)
-    right, left = open_book_path(cx, half_width, spine_top, spine_bottom, outer_top, outer_bottom, curl)
-    d.polygon(right, fill=WHITE)
-    d.polygon(left, fill=WHITE)
-
-    globe_r = int(SIZE * 0.1)
-    globe_cy = int(SIZE * 0.275)
-    globe(d, cx, globe_cy, globe_r, WHITE, GRAD_BOTTOM)
-
-    img = Image.alpha_composite(img, fg_layer)
     return img
 
 
@@ -139,8 +127,17 @@ def save_downscaled(img: Image.Image, path: str, out_size: int = 1024):
 if __name__ == "__main__":
     full = build(foreground_only=False)
     save_downscaled(full, "icon.png")
-
+    print("wrote icon.png")
     fg = build(foreground_only=True)
     save_downscaled(fg, "icon_foreground.png")
+    print("wrote icon_foreground.png")
 
-    print("Wrote icon.png and icon_foreground.png")
+    for size in (16, 32, 48, 96, 180):
+        full.resize((size, size), Image.LANCZOS).save(f"preview_{size}.png")
+    strip = Image.new("RGBA", (16 + 32 + 48 + 96 + 180 + 60, 190), (255, 255, 255, 255))
+    x = 10
+    for size in (16, 32, 48, 96, 180):
+        strip.paste(Image.open(f"preview_{size}.png"), (x, 185 - size - 3))
+        x += size + 10
+    strip.save("preview_strip.png")
+    print("wrote previews")
