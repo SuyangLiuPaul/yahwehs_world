@@ -1,4 +1,4 @@
-/// 2026-08-06: build identity for News Insights.
+/// 2026-08-06: build identity for Yahweh's World.
 ///
 /// Mirrors the pattern SeekSparks uses, deliberately — the two apps are
 /// maintained together and a second, different scheme would be one more

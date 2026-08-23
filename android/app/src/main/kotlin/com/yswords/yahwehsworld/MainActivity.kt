@@ -1,4 +1,4 @@
-package com.example.news_insights
+package com.yswords.yahwehsworld
 
 import io.flutter.embedding.android.FlutterActivity
 

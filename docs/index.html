@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>News Insights — Documentation</title>
-<meta name="description" content="Architecture, data schema, and engineering notes for News Insights, a bilingual world-news reader paired with an AI-picked Bible verse per story.">
+<title>Yahweh's World — Documentation</title>
+<meta name="description" content="Architecture, data schema, and engineering notes for Yahweh's World, a bilingual world-news reader paired with an AI-picked Bible verse per story.">
 <style>
   :root {
     --accent: #B8860B;
@@ -204,12 +204,12 @@
 <body>
 
 <div class="hero">
-  <h1>News Insights <span class="zh">新闻洞见</span></h1>
+  <h1>Yahweh's World <span class="zh">雅伟之界</span></h1>
   <p class="tagline">A bilingual (English / 简体中文) world-news reader that pairs every headline with an AI-picked Bible verse and reflection — read from the shared <code>yswords-data</code> feed.</p>
   <div class="cta">
     <a class="btn primary" href="https://news-insight.netlify.app">Open the live app</a>
-    <a class="btn secondary" href="https://github.com/SuyangLiuPaul/news_insights">View on GitHub</a>
-    <a class="btn secondary" href="https://github.com/SuyangLiuPaul/news_insights/releases/latest">Latest release</a>
+    <a class="btn secondary" href="https://github.com/SuyangLiuPaul/yahwehs_world">View on GitHub</a>
+    <a class="btn secondary" href="https://github.com/SuyangLiuPaul/yahwehs_world/releases/latest">Latest release</a>
   </div>
 </div>
 
@@ -227,7 +227,7 @@
 
 <section id="overview">
   <h2><span class="num">01</span> Overview</h2>
-  <p>News Insights is a dedicated reader for a bilingual news feed that pairs each headline — World, China, or Australia — with a Bible verse an AI has matched to it, plus a short reflection connecting the two. It doesn't run its own scraping or AI pipeline: all of that lives upstream in <a href="https://yswords-data.netlify.app">yswords-data</a>, a shared data source originally built for a sister Bible-reading app and kept CORS-enabled specifically so other clients like this one could read it.</p>
+  <p>Yahweh's World is a dedicated reader for a bilingual news feed that pairs each headline — World, China, or Australia — with a Bible verse an AI has matched to it, plus a short reflection connecting the two. It doesn't run its own scraping or AI pipeline: all of that lives upstream in <a href="https://yswords-data.netlify.app">yswords-data</a>, a shared data source originally built for a sister Bible-reading app and kept CORS-enabled specifically so other clients like this one could read it.</p>
   <p class="muted">This project is the client only — a Flutter app (web, Android, iOS, macOS from one codebase) that fetches, caches, and renders that feed.</p>
 
   <div class="grid">
@@ -383,26 +383,26 @@
     <li><span class="v">v1.1.0</span> Infinite scroll into a 90-day rolling archive</li>
     <li><span class="v">v1.0.0</span> Initial release — feed, section filter, verse lens, EN/中文 toggle</li>
   </ul>
-  <p><a href="https://github.com/SuyangLiuPaul/news_insights/releases">Full changelog on GitHub →</a></p>
+  <p><a href="https://github.com/SuyangLiuPaul/yahwehs_world/releases">Full changelog on GitHub →</a></p>
 </section>
 
 <section id="stack">
   <h2><span class="num">07</span> Tech stack &amp; running locally</h2>
   <p>Flutter (Dart ^3.12) targeting web, Android, iOS, and macOS from one codebase. <code>provider</code> for the small amount of app-wide state (locale, theme); <code>http</code> + <code>shared_preferences</code> for the entire data layer — no bespoke backend.</p>
-  <pre><code>git clone https://github.com/SuyangLiuPaul/news_insights.git
-cd news_insights
+  <pre><code>git clone https://github.com/SuyangLiuPaul/yahwehs_world.git
+cd yahwehs_world
 flutter pub get
 flutter run -d chrome
 flutter test</code></pre>
-  <p class="muted">See the <a href="https://github.com/SuyangLiuPaul/news_insights#readme">README</a> for the full project layout and deployment notes.</p>
+  <p class="muted">See the <a href="https://github.com/SuyangLiuPaul/yahwehs_world#readme">README</a> for the full project layout and deployment notes.</p>
 </section>
 
 </main>
 
 <footer>
-  News Insights is an independent reader for the <a href="https://yswords-data.netlify.app">yswords-data</a> feed.
+  Yahweh's World is an independent reader for the <a href="https://yswords-data.netlify.app">yswords-data</a> feed.
   News content and images belong to their original publishers.
-  MIT-licensed code — <a href="https://github.com/SuyangLiuPaul/news_insights">github.com/SuyangLiuPaul/news_insights</a>
+  MIT-licensed code — <a href="https://github.com/SuyangLiuPaul/yahwehs_world">github.com/SuyangLiuPaul/yahwehs_world</a>
 </footer>
 
 </body>

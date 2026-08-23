@@ -1,4 +1,4 @@
-"""Generates the News Insights app icon: an open book (the app's own
+"""Generates the Yahweh's World app icon: an open book (the app's own
 Bible-verse motif, reused from the auto_stories icon on article cards)
 with a small globe emblem at the spine, on a warm amber gradient.
 

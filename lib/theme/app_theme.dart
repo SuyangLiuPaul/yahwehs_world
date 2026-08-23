@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// News Insights' own visual identity — deliberately distinct from
+/// Yahweh's World's own visual identity — deliberately distinct from
 /// YsWords' blue theme, since this is a standalone app, not a reskin.
 /// A warm amber/gold seed reads as "editorial" (masthead, ink-on-
 /// paper) rather than "corporate blue"; Material 3's tonal system

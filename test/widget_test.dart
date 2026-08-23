@@ -6,11 +6,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:news_insights/models/news_article.dart';
-import 'package:news_insights/pages/article_detail_page.dart';
-import 'package:news_insights/theme/app_theme.dart';
-import 'package:news_insights/widgets/article_card.dart';
-import 'package:news_insights/widgets/verse_lens_card.dart';
+import 'package:yahwehs_world/models/news_article.dart';
+import 'package:yahwehs_world/pages/article_detail_page.dart';
+import 'package:yahwehs_world/theme/app_theme.dart';
+import 'package:yahwehs_world/widgets/article_card.dart';
+import 'package:yahwehs_world/widgets/verse_lens_card.dart';
 
 NewsArticle _fixtureArticle() => NewsArticle.fromJson({
       'id': 'fixture-1',

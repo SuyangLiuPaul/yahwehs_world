@@ -2,8 +2,8 @@
 /// matching exactly what the yswords-data feed provides.
 const Map<String, Map<String, String>> uiStrings = {
   'appName': {
-    'en': 'News Insights',
-    'zh': '新闻洞见',
+    'en': "Yahweh's World",
+    'zh': '雅伟之界',
   },
   'tagline': {
     'en': 'World news, read alongside Scripture',

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import '../constants/app_version.dart';
 import 'package:provider/provider.dart';
 
-import 'package:news_insights/models/app_settings.dart';
-import 'package:news_insights/models/news_article.dart';
-import 'package:news_insights/pages/article_detail_page.dart';
-import 'package:news_insights/services/news_service.dart';
-import 'package:news_insights/theme/ui_strings.dart';
-import 'package:news_insights/utils/relative_time.dart';
-import 'package:news_insights/widgets/article_card.dart';
+import 'package:yahwehs_world/models/app_settings.dart';
+import 'package:yahwehs_world/models/news_article.dart';
+import 'package:yahwehs_world/pages/article_detail_page.dart';
+import 'package:yahwehs_world/services/news_service.dart';
+import 'package:yahwehs_world/theme/ui_strings.dart';
+import 'package:yahwehs_world/utils/relative_time.dart';
+import 'package:yahwehs_world/widgets/article_card.dart';
 
 /// Wide-layout breakpoint — mirrors the master-detail pattern the
 /// original in-app News reader used (list left, detail right) rather
@@ -259,7 +259,7 @@ class _FeedPageState extends State<FeedPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(uiStrings['appName']?[locale] ?? 'News Insights'),
+        title: Text(uiStrings['appName']?[locale] ?? "Yahweh's World"),
         actions: [
           TextButton(
             onPressed: settings.toggleLocale,

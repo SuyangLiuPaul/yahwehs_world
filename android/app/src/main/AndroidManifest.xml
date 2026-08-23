@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="news_insights"
+        android:label="Yahweh's World"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

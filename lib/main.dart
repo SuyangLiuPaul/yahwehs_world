@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:news_insights/models/app_settings.dart';
-import 'package:news_insights/pages/feed_page.dart';
-import 'package:news_insights/theme/app_theme.dart';
-import 'package:news_insights/theme/ui_strings.dart';
+import 'package:yahwehs_world/models/app_settings.dart';
+import 'package:yahwehs_world/pages/feed_page.dart';
+import 'package:yahwehs_world/theme/app_theme.dart';
+import 'package:yahwehs_world/theme/ui_strings.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppSettings(),
-      child: const NewsInsightsApp(),
+      child: const YahwehsWorldApp(),
     ),
   );
 }
 
-class NewsInsightsApp extends StatefulWidget {
-  const NewsInsightsApp({super.key});
+class YahwehsWorldApp extends StatefulWidget {
+  const YahwehsWorldApp({super.key});
 
   @override
-  State<NewsInsightsApp> createState() => _NewsInsightsAppState();
+  State<YahwehsWorldApp> createState() => _YahwehsWorldAppState();
 }
 
-class _NewsInsightsAppState extends State<NewsInsightsApp> {
+class _YahwehsWorldAppState extends State<YahwehsWorldApp> {
   bool _ready = false;
 
   @override
@@ -46,7 +46,7 @@ class _NewsInsightsAppState extends State<NewsInsightsApp> {
       );
     }
     return MaterialApp(
-      title: uiStrings['appName']?[settings.locale] ?? 'News Insights',
+      title: uiStrings['appName']?[settings.locale] ?? "Yahweh's World",
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
