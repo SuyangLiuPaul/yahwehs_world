@@ -23,6 +23,16 @@ from PIL import Image, ImageDraw
 SCALE = 4
 SIZE = 1024 * SCALE
 
+# How much of the drawing canvas the artwork actually spans: the open
+# book is the widest element at +/-0.335 either side of centre.
+ART_SPAN = 0.67
+
+# The composition runs from the top of the globe (0.40 - 0.265 = 0.135)
+# to the bottom of the book (0.83), whose midpoint is 0.4825, not 0.5 —
+# so every y below is nudged down by the difference to sit optically
+# centred in the tile.
+ART_VSHIFT = 0.5 - (0.135 + 0.83) / 2
+
 # Sister-app palette (sampled from Yahweh's Words Icon-512.png).
 BG = (178, 224, 247, 255)        # light blue ground
 BLUE = (46, 114, 164, 255)       # medium blue fill
@@ -93,23 +103,40 @@ def build(foreground_only: bool) -> Image.Image:
     lw = SIZE * 0.010  # base line weight, matches the sister icon's strokes
 
     if foreground_only:
-        # Adaptive-icon safe zone: draw onto a virtual smaller canvas.
-        s = SIZE * 0.66
+        # Android shrinks this layer TWICE before it reaches the screen:
+        # flutter_launcher_icons wraps it in <inset android:inset="16%">
+        # (leaving 68% of the layer), and the launcher then shows only
+        # the central 66.7% safe zone. Drawing the artwork at the safe
+        # zone here as well compounded to ~46% of the visible tile —
+        # the icon looked shrunken next to its sister app on a home
+        # screen. Sizing by the final visible result instead:
+        #
+        #   content_in_tile = FG_CONTENT x 0.68 / 0.667
+        #
+        # FG_CONTENT = 0.80 lands the artwork at ~82% of the tile:
+        # 0.90 filled it edge to edge and clipped the top of the globe,
+        # and this matches the breathing room the sister app's icon has
+        # on the same home screen. Fixing it here rather
+        # than in ic_launcher.xml, which flutter_launcher_icons
+        # rewrites on every run.
+        FG_CONTENT = 0.80
+        s = SIZE * FG_CONTENT / ART_SPAN
         offset = (SIZE - s) / 2
     else:
         s = SIZE
         offset = 0
 
     cx = offset + s * 0.5
+    voff = offset + s * ART_VSHIFT
     # Globe sits high, half-hidden behind the book — same composition
     # as v2 so the app stays recognizable, just flat now.
-    draw_globe(draw, cx, offset + s * 0.40, s * 0.265, lw)
+    draw_globe(draw, cx, voff + s * 0.40, s * 0.265, lw)
     # Local closure so book coordinates track the safe-zone canvas.
     half_width = s * 0.335
-    spine_top = offset + s * 0.635
-    spine_bottom = offset + s * 0.83
-    outer_top = offset + s * 0.535
-    outer_bottom = offset + s * 0.73
+    spine_top = voff + s * 0.635
+    spine_bottom = voff + s * 0.83
+    outer_top = voff + s * 0.535
+    outer_bottom = voff + s * 0.73
     curl = s * 0.06
     for sign in (1, -1):
         pts = page_path(cx, sign, half_width, spine_top, spine_bottom,
