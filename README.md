@@ -12,14 +12,14 @@
 
 ## What it is
 
-Every story in the feed — across the World, China, Hong Kong, Australia, Science & Nature, and Tech desks — is automatically matched by AI to a Bible verse and a short reflection connecting the two. Tap a headline and you get the original article summary side-by-side with the verse, its reference (localized to 马太福音-style Chinese book names, not just "Matthew"), and why it applies.
+Every story in the feed — across the World, China, Hong Kong, Australia, Science & Nature, Tech, Creation, and Documentary desks — is automatically matched by AI to a Bible verse and a short reflection connecting the two. Tap a headline and you get the original article summary side-by-side with the verse, its reference (localized to 马太福音-style Chinese book names, not just "Matthew"), and why it applies.
 
 It's a dedicated reader, not a scraper: all content is pulled from **[yswords-data](https://yswords-data.netlify.app/data/daily_news.json)**, a shared, CORS-enabled data pipeline that already runs hourly for a sister Bible-reading app. This project is the read-only client for that feed.
 
 ## Features
 
 - **Bilingual throughout** — every headline, summary, article body, verse, and reflection ships with both an English and a 简体中文 version; toggle instantly with the EN/中文 button, no reload.
-- **Six desks — World / China / Hong Kong / Australia / Science & Nature / Tech** — from trusted outlets (BBC, The Guardian, SBS, DW, SCMP, HKFP, RTHK, Nature, ScienceDaily, Ars Technica), filterable with a single tap. The filter chips are driven by the feed itself, so new desks appear without an app update.
+- **Eight desks — World / China / Hong Kong / Australia / Science & Nature / Tech / Creation / Documentary** — from trusted outlets (BBC, The Guardian, SBS, DW, SCMP, HKFP, RTHK, Nature, ScienceDaily, Phys.org, Ars Technica, Mongabay, Yale Environment 360, IndieWire), filterable with a single tap. Creation covers nature, wildlife, and the state of the earth; Documentary surfaces new film/TV documentary coverage. The filter chips are driven by the feed itself, so new desks appear without an app update.
 - **Responsive master-detail layout** — single column on phone-width screens, a list-plus-reading-pane layout on anything ≥880px wide.
 - **Infinite scroll into history** — once you reach the bottom of today's edition, the feed keeps paging in previous days from a rolling 90-day archive.
 - **Verse Lens card** — the app's actual differentiator: the AI-picked verse, its text in the reader's language, a one-line theme tag, and a reflection paragraph connecting the story to Scripture.

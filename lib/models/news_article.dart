@@ -213,6 +213,8 @@ class DailyNewsBundle {
       'australia',
       'science',
       'technology',
+      'creation',
+      'documentary',
     ];
     final list = <NewsSection>[];
     for (final id in order) {

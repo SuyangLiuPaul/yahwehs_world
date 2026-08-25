@@ -16,6 +16,8 @@ const Map<String, Map<String, String>> uiStrings = {
   'sectionHongkong': {'en': 'Hong Kong', 'zh': '香港'},
   'sectionScience': {'en': 'Science', 'zh': '科学'},
   'sectionTechnology': {'en': 'Tech', 'zh': '科技'},
+  'sectionCreation': {'en': 'Creation', 'zh': '受造'},
+  'sectionDocumentary': {'en': 'Documentary', 'zh': '纪录片'},
   'refresh': {'en': 'Refresh', 'zh': '刷新'},
   'lastUpdated': {'en': 'Updated {time}', 'zh': '更新于 {time}'},
   'readOriginal': {'en': 'Read original article', 'zh': '阅读原文'},
