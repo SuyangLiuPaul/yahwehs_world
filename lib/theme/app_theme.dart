@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Yahweh's World's own visual identity — deliberately distinct from
-/// YsWords' blue theme, since this is a standalone app, not a reskin.
-/// A warm amber/gold seed reads as "editorial" (masthead, ink-on-
-/// paper) rather than "corporate blue"; Material 3's tonal system
-/// derives the full light/dark neutral palette (including the
+/// Yahweh's World's own visual identity — matched to the app icon's
+/// blue (assets/icon/generate_icon.py's BLUE, also the web splash and
+/// theme_color), so the in-app chrome doesn't clash with the icon and
+/// loading screen the user actually sees first. Material 3's tonal
+/// system derives the full light/dark neutral palette (including the
 /// charcoal-toned dark-mode surfaces) from this one seed.
 class AppTheme {
   AppTheme._();
 
-  static const Color _seed = Color(0xFFB8860B); // warm amber / dark goldenrod
+  static const Color _seed = Color(0xFF2E72A4); // icon blue
 
   // Bundled CJK fallback (assets/fonts/) — see the pubspec.yaml `fonts:`
   // comment for why this is bundled rather than left to the browser's
