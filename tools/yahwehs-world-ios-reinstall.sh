@@ -81,9 +81,17 @@ if "$FLUTTER" build ios --release "${DEFINES[@]}"; then
       echo "OK: $name"
       successes=$((successes + 1))
     else
-      # Almost always the device being asleep or off WiFi. Next fire
-      # picks it up; nothing to repair here.
-      echo "FAIL: $name (asleep, off WiFi, or unpaired)"
+      # The most common cause is NOT what this used to claim. A locked
+      # device fails with kAMDMobileImageMounterDeviceLocked, because
+      # the developer disk image cannot mount on one — and at 04:40 both
+      # devices are locked, so this is the expected nightly outcome
+      # rather than a transient network blip. The old wording ("asleep,
+      # off WiFi, or unpaired") sent an investigation down the wrong
+      # path; grep the log above for the real CoreDevice error.
+      echo "FAIL: $name — check the error above:"
+      echo "      'device is locked'  -> unlock it and re-run by hand;"
+      echo "                             the 04:40 job cannot fix this."
+      echo "      'could not find'    -> asleep, off WiFi, or unpaired."
       failures=$((failures + 1))
     fi
   done

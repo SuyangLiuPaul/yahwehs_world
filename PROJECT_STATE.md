@@ -1,0 +1,98 @@
+# PROJECT_STATE.md
+
+What is where, and what is queued. Update this in the same commit that
+changes reality. Read `AGENTS.md` first.
+
+Last verified: **2026-09-04**.
+
+---
+
+## Version, by surface
+
+`pubspec.yaml` says **1.2.6+16**.
+
+| surface | version | how it was checked | when |
+|---|---|---|---|
+| web (`news-insight.netlify.app`) | **1.2.6** | `curl` the deployed `index.html` splash | 2026-09-04 |
+| macOS (`/Applications/Yahweh's World.app`) | **1.2.6** | `defaults read … CFBundleShortVersionString` | 2026-09-04 |
+| iPhone 16 Pro Max | **unknown, ≤1.2.4** | last successful install was v1.2.4 on 2026-08-24; every nightly since has failed to install — see `docs/OPEN-ITEMS.md` #1 | 2026-09-04 |
+| iPad Pro 11-inch | **unknown, ≤1.2.4** | same | 2026-09-04 |
+| Mi Pad (Android) | **1.2.4** | `adb shell dumpsys` at install time on 2026-08-24; not re-checked since | 2026-08-24 |
+| GitHub release `latest` | **1.2.4** | `gh release list` | 2026-09-04 |
+
+Two gaps worth naming rather than hiding:
+
+- **The published release is two versions behind the code.** The portal's
+  "Download APK" button points at `releases/latest`, so anyone
+  downloading today gets 1.2.4 — without the blue theme and without the
+  Dart-side ordering for the two new desks. (They would still *see* the
+  new desks; the feed drives the chips.) Cutting a 1.2.6 release closes
+  this.
+- **No native surface has been confirmed on 1.2.6.** The macOS copy is
+  1.2.6 because the nightly job's macOS leg succeeds; both iOS devices
+  are stuck on whatever they last accepted.
+
+---
+
+## The pipeline, as measured today
+
+Live feed at `yswords-data.netlify.app/data/daily_news.json`,
+edition `2026-09-04`, generated `2026-09-03T22:06:23Z`:
+
+```
+world         18/18      science       26/26
+china         10/10      technology    13/13
+australia     10/10      creation      14/14
+hongkong      10/10      documentary   10/10
+
+111 stories, 111 deep-matched, 0 keyword-fallback
+```
+
+**Full coverage, every desk.** For context on why that is worth
+recording: on 2026-08-25 the same pipeline was at 72/132 with the last
+three desks near zero.
+
+### What actually fixed it
+
+Four changes compounded, on a **single API key**:
+
+1. default model off `gemini-2.5-flash` (~20/day) onto `-flash-lite`
+2. removing the `refresh.yml` `env:` pin that was overriding (1)
+3. `OPENAI_MODEL_CHAIN` step-down on 429/5xx instead of same-model retry
+4. cron hourly → `0 */4 * * *`, plus `rotateSectionOrder` so no desk is
+   permanently last
+
+Recent runs complete in 10–17 minutes and succeed.
+
+### A recommendation that turned out to be wrong
+
+During debugging it was asserted that adding a second API key was "the
+highest-value lever" and the owner was given a command to run. **They
+did not run it, and it was not needed** — `gh secret list` shows only
+`OPENAI_API_KEY` to this day. Capacity was never the binding constraint
+once the model chain and cadence were right.
+
+The code change that accompanied that advice is still correct and worth
+keeping: the three key env vars are now additive rather than a `||`
+chain, so if a second key is ever added it will genuinely add capacity
+instead of silently disabling the first.
+
+---
+
+## Queue
+
+Nothing is in flight. Candidates, roughly by value:
+
+1. **Cut a v1.2.6 GitHub release** so the portal's download link stops
+   serving 1.2.4. Mechanical; needs the four platform artifacts built.
+2. **Get the iOS devices back on a current build** — see
+   `docs/OPEN-ITEMS.md` #1. Needs the owner present with a device
+   unlocked, or a change of approach.
+3. **Judge verse quality now that coverage is 100%.** Every earlier
+   attempt to assess this was confounded: most stories were on keyword
+   fallback, so the deep-match prompt was never really being read. This
+   is the first time the question can be asked honestly. If the verses
+   are still weak, the lever is the prompt in `aiDeepMatch`, not quota.
+4. **`yswords-data/README.md` overstates the key advice** — it still
+   calls adding a key "the highest-value lever", written before the
+   evidence above. Worth softening.
